@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome Page</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f4f8; /* Fallback background color */
+            background-image: url('https://marketplace.canva.com/EAGIrRNST80/1/0/900w/canva-green-and-white-modern-elegant-islamic-pattern-background-instagram-story-r1V56Ug4GKk.jpg');
+            background-size: cover; /* Make the background cover the entire page */
+            background-position: center; /* Center the background image */
+            overflow: hidden;
+            flex-direction: column;
+        }
+
+        .welcome-text {
+            font-size: 36px;
+            font-weight: bold;
+            color: black;
+            text-align: center;
+            opacity: 1;
+            transition: opacity 1s ease-out;
+         background-color: #32CD32;/* Attractive background color */
+            padding: 20px; /* Padding for a balanced appearance */
+            border-radius: 15px; /* Rounded corners */
+            width: 80%; /* Adjust width to make it more centered */
+            margin-top: 100px 0; /* Some margin to give it space */
+            top: 50%;
+        }
+
+        .language-selector {
+            display: none;
+            text-align: center;
+            opacity: 0;
+            animation: fadeIn 1s ease-out forwards;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .language-options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .language-btn {
+            font-size: 20px;
+            padding: 10px 20px;
+            border: 2px solid #ff5733;
+            background-color: white;
+            color: black;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 200px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .language-btn:hover, .selected {
+            background-color: #ff5733 !important;
+            color: white !important;
+        }
+
+        .proceed-btn {
+            padding: 10px 20px;
+            background-color: #ff5733;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+
+        .proceed-btn:hover {
+            background-color: #ff2a00;
+        }
+
+        .content-section {
+            display: none;
+            width: 90%;
+            flex-direction: column;
+            align-items: center;
+            overflow-y: auto;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .top-div, .bottom-div {
+            width: 90%;
+            height: 20px;
+            background-color: #ff5733;
+        }
+
+        .middle-div {
+            width: 90%;
+            flex-grow: 1;
+            background-color: white;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 20px;
+            text-align: left;
+            flex-direction: column;
+        }
+
+        .middle-div.urdu {
+            text-align: right;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: #ff5733;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        h3 {
+            font-size: 24px;
+            color: #ff5733;
+        }
+
+        p {
+            font-size: 18px;
+            color: black;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .middle-div.english, 
+        .middle-div.hindi {
+            text-align: left;
+        }
+
+        .middle-div.urdu {
+            text-align: right;
+        }
+
+        /* Exit Button */
+        .exit-btn {
+            margin-top: 200px;
+            padding: 10px 20px;
+            background-color: #25D366;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .exit-btn:hover {
+            background-color: #1da851;
+        }
+    </style>
+</head>
+<body>
+    <div class="welcome-text" id="welcomeText"></div>
+    
+    <div class="language-selector" id="languageSelector">
+        <div class="language-options">
+            <button class="language-btn" onclick="selectLanguage(this, 'urdu')">اردو</button>
+            <button class="language-btn" onclick="selectLanguage(this, 'english')">English</button>
+            <button class="language-btn" onclick="selectLanguage(this, 'hindi')">Hindi</button>
+        </div>
+        <button class="proceed-btn" id="proceedBtn" onclick="proceedToNextStep()" disabled>Proceed</button>
+    </div>
+
+    <div class="content-section" id="contentSection">
+        <button class="back-btn" onclick="goBack()">Change Language</button>
+        <div class="top-div"></div>
+        <div class="middle-div" id="infoDisplay">
+            <!-- Content will be displayed here after language selection -->
+        </div>
+        <div class="bottom-div"></div>
+    </div>
+
+    <script>
+        const welcomeText = "Jazak Allah for Blessing us with your presence";
+        let index = 0;
+        const speed = 100;
+
+        function typeText() {
+            if (index < welcomeText.length) {
+                document.getElementById("welcomeText").textContent += welcomeText.charAt(index);
+                index++;
+                setTimeout(typeText, speed);
+            } else {
+                document.getElementById("welcomeText").style.opacity = 0;
+                setTimeout(showLanguageSelector, 1000);
+            }
+        }
+
+        function showLanguageSelector() {
+            document.getElementById("languageSelector").style.display = 'block';
+        }
+
+        let selectedLanguage = "";
+
+        function selectLanguage(btn, language) {
+            selectedLanguage = language;
+            document.getElementById("proceedBtn").disabled = false;
+            document.querySelectorAll(".language-btn").forEach(button => button.classList.remove("selected"));
+            btn.classList.add("selected");
+        }
+
+        function proceedToNextStep() {
+            document.getElementById("languageSelector").style.display = 'none';
+            document.getElementById("contentSection").style.display = 'flex';
+            
+            let content = "";
+            
+            // Adjust content and alignment based on selected language
+            const infoDiv = document.getElementById("infoDisplay");
+            if (selectedLanguage === "english") {
+                content = `<h3>Why this kind of a Setup?</h3>
+                    <p>The Prophet (Peace Be upon Him) slaughtered a sheep on the wedding of his daughter Zainab (Allah be pleased with her), and He served to date and sawiq (a mixture of made of wheat and barley) on his wedding with Safiyyah (Allah be pleased with her). Although the Prophet of Allah (Peace Be Upon Him) is the most generous of all people in the universe, the Prophet served simpler food instead of meat and bread. (Ibn Majah, Sunan, Hadith no: 1908-1910).</p> <p>Sayyida Ayesha (Allah be Satisfied with her) narrates that the Prophet of Allah (Peace Be Upon Him) said: “The most blessed marriage (Nikah) is the one with the least expenditures.” (al-Bayhaqi in his Shu’ab al-Iman & Mishkat al-Masabih).</p>
+
+                    <h3>Why do we sit on the floor?</h3>
+                    <p>Sahih Bukhari Volume 7, Book 65, Number 298: Narrated Anas (May Allah be pleased with him): To the best of my knowledge, the Prophet did not take his meals in a big tray at all, nor did he ever eat well-baked thin bread, nor did he ever eat at a dining table.</p>
+
+                    <h3>Why This food?</h3>
+<p>Sahih Bukhari Volume 7, Book 65, Number 348: Narrated Anas (May Allah be pleased with him): I saw the Prophet being served with soup and containing gourd and cured meat, and I saw him picking and eating the pieces of gourd.</p>
+
+                    <h3>Why a Single Dish?</h3>
+<p>Once, Sayyiduna Umar’s(ra) children and some others said to him, that if he ate better foods, he would be stronger and better able to fulfill his duties. Umar(ra) acknowledged their sentiments, however he said that if he left the path of those before him, i.e. the Holy Prophet(sa) and Hazrat Abu Bakr(ra), then he would not be able to achieve the same rank. The Second Caliph(ra), explained that the Holy Prophet(sa) taught simplicity, and said that while eating, there should not be more than one dish.</p>
+
+                    <h3>Success lies in the Sunnah:</h3>
+                    <p>Say (O Prophet): “If you really love Allah, then follow ME (the Prophet), and Allah shall love you and forgive you your sins. Allah is Most-Forgiving, Very-Merciful. Quran 3:31.</p>
+
+                    <h3>Let us all take a vow to get closer to Allah SWT and his Rasool ﷺ, follow his Sunnah in all aspects of life including Earning, Birth, death, & Marriage.  Let's make this Sunnah setup flourish and forbid ourselves from westernization of our Children's marriages. </h3>
+`;  // Your English content here
+                infoDiv.classList.remove("urdu");
+                infoDiv.classList.remove("hindi");
+                infoDiv.classList.add("english");
+            } else if (selectedLanguage === "urdu") {
+                content = `<h3>ایسا انتظام کیوں؟</h3>
+                    <p>حضرت نبی اکرم صلی اللہ علیہ وآلہ وسلم نے اپنی بیٹی حضرت زینب رضی اللہ عنہا کی شادی پر ایک بکری ذبح کی، اور حضرت صفیہ رضی اللہ عنہا کے ساتھ اپنی شادی پر تاریخ اور سَوِیق (گندم اور جو کا آمیزہ) پیش کیا۔ حالانکہ اللہ کے رسول صلی اللہ علیہ وآلہ وسلم تمام انسانوں سے زیادہ سخی ہیں، لیکن آپ نے گوشت اور روٹی کی بجائے سادہ کھانا پیش کیا۔ (ابن ماجہ، سنن، حدیث نمبر: 1908-1910)</p>
+                    <p>حضرت عائشہ رضی اللہ عنہا بیان کرتی ہیں کہ اللہ کے رسول صلی اللہ علیہ وآلہ وسلم نے فرمایا: "سب سے بابرکت نکاح وہ ہے جس میں کم سے کم خرچہ ہو۔" (البیہقی، شعب الایمان اور مشکوۃ المصابیح)</p>
+
+                    <h3>ہم زمین پر کیوں بیٹھے ہیں؟</h3>
+                    <p>صحیح بخاری جلد 7، کتاب 65، حدیث نمبر 298: حضرت انس رضی اللہ عنہ نے بیان کیا: میرے علم کے مطابق، اللہ کے رسول صلی اللہ علیہ وآلہ وسلم نے کبھی بھی کھانے کے لیے بڑے ٹرے کا استعمال نہیں کیا، اور نہ ہی آپ نے کبھی پتلی روٹی کھائی، اور نہ ہی آپ نے کھانے کے لیے کھانے کی میز پر بیٹھا۔</p>
+
+                    <h3>ہم یہ کھانا کیوں کھاتے ہیں؟</h3>
+                    <p>صحیح بخاری جلد 7، کتاب 65، حدیث نمبر 348: حضرت انس رضی اللہ عنہ نے بیان کیا: میں نے رسول اللہ صلی اللہ علیہ وآلہ وسلم کو شوربے میں کدو اور گوشت کے ٹکڑے کھاتے دیکھا۔</p>
+
+                    <h3>ہم کیوں ایک ہی پکوان پیش کرتے ہیں؟</h3>
+                    <p>ایک مرتبہ حضرت عمر رضی اللہ عنہ کے بچوں اور کچھ اور لوگوں نے ان سے کہا کہ اگر وہ اچھے کھانے کھائیں گے تو ان کی طاقت بڑھے گی اور وہ اپنے فرائض کو بہتر طور پر ادا کریں گے۔ حضرت عمر رضی اللہ عنہ نے ان کی بات سنی اور فرمایا کہ اگر میں ان سے بہتر کھانا کھاؤں گا تو پھر میں اللہ کے رسول صلی اللہ علیہ وآلہ وسلم اور حضرت ابو بکر رضی اللہ عنہ کی پیروی نہیں کر سکوں گا۔</p>
+
+                    <h3>کامیابی سنت میں ہے:</h3>
+                    <p>اللہ تعالیٰ فرماتا ہے: "کہہ دو (اے نبی صلی اللہ علیہ وآلہ وسلم): اگر تم اللہ سے محبت رکھتے ہو تو تم مجھ (رسول اللہ صلی اللہ علیہ وآلہ وسلم) کی اتباع کرو، اللہ تم سے محبت کرے گا اور تمہارے گناہ معاف کرے گا۔ اللہ بہت بخشنے والا، نہایت مہربان ہے۔" (الآل عمران 3:31)</p>
+
+                    <h3>ہم سب اللہ اور اس کے رسول ﷺ کی طرف سے قریب ہونے کا عہد کریں، ان کی سنت کو اپنی زندگی کے تمام پہلوؤں میں اختیار کریں، بشمول کمانا، پیدا ہونا، مرنا اور شادی۔آئیں ہم اس سنتی تنظیم کو فروغ دیں اور اپنی اولاد کی شادیوں کو مغربی طرز سے بچائیں۔</h3>
+`;  // Your Urdu content here
+                infoDiv.classList.remove("english");
+                infoDiv.classList.remove("hindi");
+                infoDiv.classList.add("urdu");
+            } else if (selectedLanguage === "hindi") {
+                content = `<h3>ऐसा प्रबंध क्यों?</h3>
+                    <p>पैगंबर (सल्लल्लाहु अलैहि वसल्लम) ने अपनी बेटी ज़ैनब (रज़ी अल्लाहु अन्हा) की शादी पर एक बकरा कटा, और अपनी शादी में सफिया (रज़ी अल्लाहु अन्हा) के साथ तारीख और सवीक (गेहूं और जौ का मिश्रण) परोसा। जबकि पैगंबर (सल्लल्लाहु अलैहि वसल्लम) दुनिया के सबसे अधिक उदार व्यक्ति हैं, उन्होंने मांस और रोटी के बजाय साधारण खाना परोसा। (इब्न माजा, सुनन, हदीस संख्या: 1908-1910)</p>
+                    <p>उम्मुल मोमिनीन अयशा (रज़ी अल्लाहु अन्हा) कहती हैं कि पैगंबर (सल्लल्लाहु अलैहि वसल्लम) ने कहा: "सबसे आशीर्वादित शादी वह है, जिसमें कम से कम खर्चा हो।" (अल-बैयहकी, शुआब अल-इमाँ और मश्क़त अल-मसाबिह)</p>
+
+                    <h3>हम ज़मीन पर क्यों बैठते हैं?</h3>
+                    <p>सही बुखारी, खंड 7, पुस्तक 65, हदीस संख्या 298: हज़रत अनस (रज़ी अल्लाहु अन्हो) ने बयान किया: मुझे यकीन है कि पैगंबर (सल्लल्लाहु अलैहि वसल्लम) ने कभी भी खाने के लिए बड़े थाली का इस्तेमाल नहीं किया, न ही कभी पतली रोटी खाई, और न ही कभी खाने के लिए मेज़ पर बैठे।</p>
+
+                    <h3>हम यह खाना क्यों खाते हैं?</h3>
+                    <p>सही बुखारी, खंड 7, पुस्तक 65, हदीस संख्या 348: हज़रत अनस (रज़ी अल्लाहु अन्हो) ने बयान किया: मैंने पैगंबर (सल्लल्लाहु अलैहि वसल्लम) को सूप खाते हुए देखा, जिसमें लौकी और मांस था, और उन्हें लौकी के टुकड़े चुनते हुए देखा।</p>
+
+                    <h3>हम एक ही पकवान क्यों पेश करते हैं?</h3>
+                    <p>एक बार, हज़रत उमर (रज़ी अल्लाहु अन्हो) के बच्चों और कुछ अन्य लोगों ने उनसे कहा कि अगर वह अच्छा खाना खाएंगे तो उनका शारीरिक स्वास्थ्य बेहतर होगा और वे अपने कर्तव्यों को अधिक अच्छे से पूरा करेंगे। हज़रत उमर (रज़ी अल्लाहु अन्हो) ने उनकी बात सुनी और कहा कि अगर वह अपने से पहले के लोगों की तरह न खाए, तो वह सही रास्ते से भटक जाएंगे।</p>
+
+                    <h3>सफलता सुन्नत में है:</h3>
+                    <p>कुरान में है: "कहो (ऐ नबी): अगर तुम अल्लाह से सच्ची मोहब्बत करते हो, तो तुम मुझसे (पैगंबर सल्लल्लाहु अलैहि वसल्लम) प्यार करो और अल्लाह तुमसे प्यार करेगा और तुम्हारे गुनाह माफ कर देगा। अल्लाह बहुत माफी देने वाला, अत्यंत दयालु है।" (आल-इम्रान 3:31)</p>
+
+                    <h3>आइए हम सब अल्लाह SWT और उनके रसूल ﷺ के करीब आने का संकल्प लें, उनके सुन्नत को अपने जीवन के हर पहलू में अपनाएं, जिसमें कमाई, जन्म, मृत्यु और शादी भी शामिल है। आइए हम इस सुन्नी व्यवस्था को बढ़ावा दें और अपने बच्चों की शादी को पश्चिमीकरण से बचाएं।</h3>
+`;  // Your Hindi content here
+                infoDiv.classList.remove("english");
+                infoDiv.classList.remove("urdu");
+                infoDiv.classList.add("hindi");
+            }
+
+            infoDiv.innerHTML = content;
+        }
+
+        function goBack() {
+            document.getElementById("contentSection").style.display = 'none';
+            document.getElementById("languageSelector").style.display = 'block';
+        }
+
+        typeText();
+        a
+        function exitToWhatsApp() {
+            const phoneNumber = "+919702873686"; // Replace with your WhatsApp number
+            const message = encodeURIComponent("Jazak Allah, Maaz! The Information was Helpful, I learnt something new today.");
+            window.location.href = `https://wa.me/${phoneNumber}?text=${message}`;
+        }
+    </script>
+
+    <button class="exit-btn" onclick="exitToWhatsApp()">Exit</button>
+</body>
+</html>
